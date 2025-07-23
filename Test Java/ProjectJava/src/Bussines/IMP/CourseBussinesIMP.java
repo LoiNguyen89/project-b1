@@ -2,6 +2,7 @@ package Bussines.IMP;
 
 import Bussines.CourseBussines;
 import Dao.CourseDao;
+import Dao.IMP.CourseDaoIMP;
 import Entity.Course;
 
 import java.util.List;
@@ -9,9 +10,8 @@ import java.util.List;
 public class CourseBussinesIMP implements CourseBussines {
     private final CourseDao courseDao;
     public CourseBussinesIMP() {
-        courseDao = new Dao.IMP.CourseDaoIMP();
+        courseDao = new CourseDaoIMP();
     }
-
 
     @Override
     public List<Course> getAllCourses() {

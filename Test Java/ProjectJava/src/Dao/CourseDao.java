@@ -13,4 +13,5 @@ public interface CourseDao {
     boolean deleteCourse(int id);
     List<Course> searchCourseByName(String keyword);
     List<Course> sortCourses(String orderBy, boolean asc);
+
 }

@@ -11,7 +11,6 @@ public class Main {
             String username = input.nextLine();
             System.out.print("Nhập Password: ");
             String password = input.nextLine();
-
             if (!Validate.validateInput(username, password)) {
                 System.out.println("Dữ liệu không hợp lệ. Vui lòng thử lại!");
                 return;

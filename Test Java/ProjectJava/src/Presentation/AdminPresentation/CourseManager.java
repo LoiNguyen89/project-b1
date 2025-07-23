@@ -23,7 +23,7 @@ public class CourseManager {
             System.out.println("4. Xóa khóa học");
             System.out.println("5. Tìm kiếm khóa học theo tên");
             System.out.println("6. Sắp xếp khóa học");
-            System.out.println("0. Thoát");
+            System.out.println("7. Thoát");
             System.out.print("Chọn: ");
 
             int choice = Integer.parseInt(input.nextLine());
@@ -46,7 +46,7 @@ public class CourseManager {
                 case 6:
                     sortCourses();
                     break;
-                case 0:
+                case 7:
                     System.out.println("Thoát menu quản lý.");
                     break;
                 default:
@@ -186,13 +186,76 @@ public class CourseManager {
 
     public void sortCourses() {
         System.out.println("\n--- Sắp xếp khóa học ---");
-        System.out.print("Sắp xếp theo (id/name): ");
-        String orderBy = input.nextLine();
-        System.out.print("Tăng dần? (y/n): ");
-        boolean asc = input.nextLine().equalsIgnoreCase("y");
+        System.out.println("1. Sắp xếp theo ID");
+        System.out.println("2. Sắp xếp theo Tên");
+        System.out.print("Chọn kiểu sắp xếp (1-2): ");
+        int sortChoice;
+
+        try {
+            sortChoice = Integer.parseInt(input.nextLine());
+        } catch (NumberFormatException e) {
+            System.out.println("Lựa chọn không hợp lệ!");
+            return;
+        }
+
+        String orderBy;
+        boolean asc;
+
+        if (sortChoice == 1) {
+            orderBy = "id";
+            System.out.println("1. Tăng dần theo ID");
+            System.out.println("2. Giảm dần theo ID");
+            System.out.print("Chọn (1-2): ");
+            int sortChoiceById;
+            try {
+                sortChoiceById = Integer.parseInt(input.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Lựa chọn không hợp lệ!");
+                return;
+            }
+            if (sortChoiceById == 1) {
+                asc = true;
+            } else if (sortChoiceById == 2) {
+                asc = false;
+            } else {
+                System.out.println("Lựa chọn không hợp lệ!");
+                return;
+            }
+        } else if (sortChoice == 2) {
+            orderBy = "name";
+            System.out.println("1. Tăng dần theo Name");
+            System.out.println("2. Giảm dần theo Name");
+            System.out.print("Chọn (1-2): ");
+            int sortChoiceByName;
+            try {
+                sortChoiceByName = Integer.parseInt(input.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Lựa chọn không hợp lệ!");
+                return;
+            }
+            if (sortChoiceByName == 1) {
+                asc = true;
+            } else if (sortChoiceByName == 2) {
+                asc = false;
+            } else {
+                System.out.println("Lựa chọn không hợp lệ!");
+                return;
+            }
+        } else {
+            System.out.println("Lựa chọn không hợp lệ!");
+            return;
+        }
+
         List<Course> courses = courseBussines.sortCourses(orderBy, asc);
-        courses.forEach(System.out::println);
+        if (courses.isEmpty()) {
+            System.out.println("Không có khóa học nào để sắp xếp.");
+        } else {
+            System.out.println("\n--- Danh sách khóa học sau khi sắp xếp ---");
+            courses.forEach(System.out::println);
+        }
     }
+
+
 
 }
 
