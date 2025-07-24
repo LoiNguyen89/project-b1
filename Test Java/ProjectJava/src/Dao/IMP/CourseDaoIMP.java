@@ -48,7 +48,7 @@ public class CourseDaoIMP implements CourseDao {
 
         try {
             conn = ConnectionDB.openConnection();
-            callst = conn.prepareCall("{CALL get_course_id(?)}");
+            callst = conn.prepareCall("{CALL get_course_by_id(?)}");
             callst.setInt(1, id);
             rs = callst.executeQuery();
             if (rs.next()) {
@@ -177,8 +177,7 @@ public class CourseDaoIMP implements CourseDao {
                 course.setName(rs.getString("name"));
                 course.setDuration(rs.getInt("duration"));
                 course.setInstructor(rs.getString("instructor"));
-                Timestamp ts = rs.getTimestamp("create_at");
-                course.setCreateAt(ts != null ? ts.toLocalDateTime() : null);
+                course.setCreateAt(rs.getTimestamp("create_at").toLocalDateTime());
                 list.add(course);
             }
         } catch (SQLException e) {
@@ -211,8 +210,7 @@ public class CourseDaoIMP implements CourseDao {
                 course.setName(rs.getString("name"));
                 course.setDuration(rs.getInt("duration"));
                 course.setInstructor(rs.getString("instructor"));
-                Timestamp ts = rs.getTimestamp("create_at");
-                course.setCreateAt(ts != null ? ts.toLocalDateTime() : null);
+                course.setCreateAt(rs.getTimestamp("create_at").toLocalDateTime());
                 list.add(course);
             }
         } catch (SQLException e) {
@@ -223,5 +221,39 @@ public class CourseDaoIMP implements CourseDao {
 
         return list;
     }
+
+    @Override
+    public List<Course> searchCoursesByName(String keyword) {
+        List<Course> list = new ArrayList<>();
+        Connection conn = null;
+        CallableStatement callst = null;
+        ResultSet rs = null;
+
+        try {
+            conn = ConnectionDB.openConnection();
+            callst = conn.prepareCall("{CALL search_course_by_name(?)}");
+            callst.setString(1, keyword);
+            rs = callst.executeQuery();
+
+            while (rs.next()) {
+                Course course = new Course();
+                course.setId(rs.getInt("id"));
+                course.setName(rs.getString("name"));
+                course.setDuration(rs.getInt("duration"));
+                course.setInstructor(rs.getString("instructor"));
+                course.setCreateAt(rs.getTimestamp("create_at").toLocalDateTime());
+
+                list.add(course);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            ConnectionDB.closeConnection(conn, callst);
+        }
+        return list;
+    }
+
+
+
 }
 

@@ -49,4 +49,14 @@ public class UserBussinesIMP implements UserBussines {
     public List<User> sortStudent(String orderBy, boolean asc) {
         return userDao.sortStudent(orderBy, asc);
     }
+
+    @Override
+    public User getUserForLoggin(String username, String password) {
+        return userDao.getUserForLoggin(username, password);
+    }
+
+    @Override
+    public boolean updatePasswordInDB(int userId, String newPassword) {
+        return userDao.updatePasswordInDB(userId, newPassword);
+    }
 }

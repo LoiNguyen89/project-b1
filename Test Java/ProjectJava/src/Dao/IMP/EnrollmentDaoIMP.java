@@ -1,6 +1,7 @@
 package Dao.IMP;
 
 import Dao.EnrollmentDao;
+import Entity.Course;
 import Entity.Enrollment;
 import Ulti.ConnectionDB;
 
@@ -74,6 +75,88 @@ public class EnrollmentDaoIMP implements EnrollmentDao {
             ConnectionDB.closeConnection(conn, callst);
         }
         return false;
+    }
+
+
+    @Override
+    public boolean registerCourse(int studentId, int courseId) {
+        Connection conn = null;
+        CallableStatement callst = null;
+
+        try {
+            conn = ConnectionDB.openConnection();
+            callst = conn.prepareCall("{CALL register_course(?, ?)}");
+            callst.setInt(1, studentId);
+            callst.setInt(2, courseId);
+
+            int result = callst.executeUpdate();
+            return result > 0;
+
+        } catch (SQLException e) {
+            System.out.println("Lỗi khi đăng ký khóa học: " + e.getMessage());
+            return false;
+
+        } finally {
+            ConnectionDB.closeConnection(conn, callst);
+        }
+    }
+
+    @Override
+    public List<Course> getRegisteredCourses(int studentId) {
+        List<Course> courseList = new ArrayList<>();
+        Connection conn = null;
+        CallableStatement callst = null;
+        ResultSet rs = null;
+
+        try {
+            conn = ConnectionDB.openConnection();
+            callst = conn.prepareCall("{CALL get_registered_courses(?)}");
+            callst.setInt(1, studentId);
+
+            rs = callst.executeQuery();
+            while (rs.next()) {
+                Course course = new Course();
+                course.setId(rs.getInt("id"));
+                course.setName(rs.getString("name"));
+                course.setDuration(rs.getInt("duration"));
+                course.setInstructor(rs.getString("instructor"));
+
+                Timestamp timestamp = rs.getTimestamp("create_at");
+                course.setCreateAt(timestamp != null ? timestamp.toLocalDateTime() : null);
+
+                courseList.add(course);
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Lỗi khi lấy danh sách khóa học đã đăng ký: " + e.getMessage());
+
+        } finally {
+            ConnectionDB.closeConnection(conn, callst);
+        }
+
+        return courseList;
+    }
+
+    @Override
+    public boolean cancelRegistration(int enrollmentId) {
+        Connection conn = null;
+        CallableStatement callst = null;
+
+        try {
+            conn = ConnectionDB.openConnection();
+            callst = conn.prepareCall("{CALL cancel_registration(?)}");
+            callst.setInt(1, enrollmentId);
+
+            int result = callst.executeUpdate();
+            return result > 0;
+
+        } catch (SQLException e) {
+            System.out.println("Lỗi khi hủy đăng ký khóa học: " + e.getMessage());
+            return false;
+
+        } finally {
+            ConnectionDB.closeConnection(conn, callst);
+        }
     }
 }
 

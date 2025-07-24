@@ -2,17 +2,19 @@ package Presentation;
 
 import Presentation.AdminPresentation.CourseManager;
 import Presentation.AdminPresentation.EnrollmentManager;
+import Presentation.AdminPresentation.StatisticsManager;
 import Presentation.AdminPresentation.UserManager;
 
 import java.util.Scanner;
 
 public class AdminMenu {
-    private final Scanner input = new Scanner(System.in);
-
+    Scanner input = new Scanner(System.in);
     public AdminMenu() {
         showMenu();
     }
-    private void showMenu() {
+
+    public void showMenu() {
+        boolean exit = false;
         int choice;
         do {
             System.out.println("\n===== MENU QUẢN LÝ ADMIN =====");
@@ -34,14 +36,14 @@ public class AdminMenu {
                 case 1 -> new CourseManager();
                 case 2 -> new UserManager();
                 case 3 -> new EnrollmentManager();
-//                case 4 -> new StatisticsManager();
+                case 4 -> new StatisticsManager();
                 case 5 -> {
                     System.out.println("Thoát menu Admin.");
-                    return;
+                    exit = true;
                 }
                 default -> System.out.println("Lựa chọn không hợp lệ!");
             }
 
-        } while (true);
+        } while (!exit);
     }
 }

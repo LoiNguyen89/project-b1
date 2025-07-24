@@ -3,6 +3,7 @@ package Bussines.IMP;
 import Bussines.EnrollmentBussines;
 import Dao.EnrollmentDao;
 import Dao.IMP.EnrollmentDaoIMP;
+import Entity.Course;
 import Entity.Enrollment;
 import java.util.List;
 
@@ -31,5 +32,20 @@ public class EnrollmentBussinesIMP implements EnrollmentBussines {
     @Override
     public boolean deleteEnrollment(int id) {
         return enrollmentDao.deleteEnrollment(id);
+    }
+
+    @Override
+    public boolean registerCourse(int studentId, int courseId) {
+        return enrollmentDao.registerCourse(studentId, courseId);
+    }
+
+    @Override
+    public List<Course> getRegisteredCourses(int studentId) {
+        return enrollmentDao.getRegisteredCourses(studentId);
+    }
+
+    @Override
+    public boolean cancelRegistration(int enrollmentId) {
+        return enrollmentDao.cancelRegistration(enrollmentId);
     }
 }

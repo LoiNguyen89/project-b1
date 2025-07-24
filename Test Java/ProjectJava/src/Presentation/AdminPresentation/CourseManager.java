@@ -3,6 +3,7 @@ package Presentation.AdminPresentation;
 import Bussines.CourseBussines;
 import Bussines.IMP.CourseBussinesIMP;
 import Entity.Course;
+import Presentation.AdminMenu;
 import Validate.Validate;
 
 import java.util.List;
@@ -48,9 +49,10 @@ public class CourseManager {
                     break;
                 case 7:
                     System.out.println("Thoát menu quản lý.");
+                    new AdminMenu();
                     break;
                 default:
-                    System.out.println("Lựa chọn không hợp lệ!");
+                    System.err.println("Lựa chọn không hợp lệ!");
                     break;
             }
 
@@ -93,83 +95,119 @@ public class CourseManager {
     }
 
     public void editCourse() {
-        System.out.println("\n--- Chỉnh sửa khóa học ---");
-        System.out.print("Nhập ID khóa học cần sửa: ");
-        int id = Integer.parseInt(input.nextLine());
-        Course course = courseBussines.getCourseById(id);
-        if (course == null) {
-            System.out.println("Không tìm thấy khóa học!");
-            return;
-        }
-        System.out.println("Khóa học hiện tại: " + course);
+        boolean exit = false;
+        do {
 
-        System.out.println("1. Sửa tên");
-        System.out.println("2. Sửa thời lượng");
-        System.out.println("3. Sửa giảng viên");
-        System.out.print("Chọn thuộc tính cần sửa: ");
-        int opt = Integer.parseInt(input.nextLine());
+            System.out.println("\n--- Chỉnh sửa khóa học ---");
+            System.out.print("Nhập ID khóa học cần sửa: ");
+            String id = input.nextLine();
+            if (Validate.validateCourseId(id)) {
 
-        switch (opt) {
-            case 1 -> {
-                System.out.print("Nhập tên mới: ");
-                String name = input.nextLine();
-                if (Validate.validateName(name)) {
-                    course.setName(name);
-                } else {
-                    System.out.println("Tên không hợp lệ!");
+
+                Course course = courseBussines.getCourseById(Integer.parseInt(id));
+                if (course == null) {
+                    System.out.println("Không tìm thấy khóa học!");
                     return;
                 }
-            }
-            case 2 -> {
-                System.out.print("Nhập thời lượng mới: ");
-                String durationStr = input.nextLine();
-                if (Validate.validateDuration(durationStr)) {
-                    course.setDuration(Integer.parseInt(durationStr));
-                } else {
-                    System.out.println("Thời lượng không hợp lệ!");
-                    return;
-                }
-            }
-            case 3 -> {
-                System.out.print("Nhập giảng viên mới: ");
-                String instructor = input.nextLine();
-                if (Validate.validateInstructor(instructor)) {
-                    course.setInstructor(instructor);
-                } else {
-                    System.out.println("Tên giảng viên không hợp lệ!");
-                    return;
-                }
-            }
-            default -> System.out.println("Lựa chọn không hợp lệ!");
-        }
+                System.out.println("Khóa học hiện tại: " + course);
+                System.out.println("1. Sửa tên");
+                System.out.println("2. Sửa thời lượng");
+                System.out.println("3. Sửa giảng viên");
+                System.out.println("4. Thoát sửa");
+                System.out.print("Chọn thuộc tính cần sửa: ");
 
-        if (courseBussines.updateCourse(course)) {
-            System.out.println("Cập nhật thành công!");
-        } else {
-            System.out.println("Cập nhật thất bại!");
-        }
+
+                String opt = input.nextLine();
+                if (Validate.validateCourseId(opt)) {
+
+                    switch (Integer.parseInt(opt)) {
+                        case 1 -> {
+                            System.out.print("Nhập tên mới: ");
+                            String name = input.nextLine();
+                            if (Validate.validateName(name)) {
+                                course.setName(name);
+                            } else {
+                                System.out.println("Tên không hợp lệ!");
+                                return;
+                            }
+                        }
+                        case 2 -> {
+                            System.out.print("Nhập thời lượng mới: ");
+                            String durationStr = input.nextLine();
+                            if (Validate.validateDuration(durationStr)) {
+                                course.setDuration(Integer.parseInt(durationStr));
+                            } else {
+                                System.out.println("Thời lượng không hợp lệ!");
+                                return;
+                            }
+                        }
+                        case 3 -> {
+                            System.out.print("Nhập giảng viên mới: ");
+                            String instructor = input.nextLine();
+                            if (Validate.validateInstructor(instructor)) {
+                                course.setInstructor(instructor);
+                            } else {
+                                System.out.println("Tên giảng viên không hợp lệ!");
+                                return;
+                            }
+                        }
+
+                        case 4 -> {
+                            System.out.println("Tạm biệt !!!");
+                            exit = true;
+
+                        }
+                        default -> System.out.println("Lựa chọn không hợp lệ!");
+                    }
+                }
+
+                if (courseBussines.updateCourse(course)) {
+                    System.out.println("Cập nhật thành công!");
+                    break;
+                } else {
+                    System.out.println("Cập nhật thất bại!");
+                }
+
+            } else {
+                System.err.println("ID không hợp lệ");
+            }
+        } while (!exit);
+
     }
 
     public void deleteCourse() {
-        System.out.println("\n--- Xóa khóa học ---");
-        System.out.print("Nhập ID khóa học cần xóa: ");
-        int id = Integer.parseInt(input.nextLine());
-        Course course = courseBussines.getCourseById(id);
-        if (course == null) {
-            System.out.println("Không tìm thấy khóa học!");
-            return;
-        }
-        System.out.print("Bạn có chắc chắn muốn xóa (y/n)? ");
-        String confirm = input.nextLine();
-        if (confirm.equalsIgnoreCase("y")) {
-            if (courseBussines.deleteCourse(id)) {
-                System.out.println("Xóa thành công!");
+        boolean exit = false;
+        do {
+            System.out.println("\n--- Xóa khóa học ---");
+            System.out.print("Nhập ID khóa học cần xóa: ");
+            String id = input.nextLine();
+            if (Validate.validateCourseId(id)) {
+                Course course = courseBussines.getCourseById(Integer.parseInt(id));
+                if (course == null) {
+                    System.out.println("Không tìm thấy khóa học!");
+                    return;
+                }
+                System.out.print("Bạn có chắc chắn muốn xóa (y/n)? ");
+                String confirm = input.nextLine();
+                if (confirm.equalsIgnoreCase("y")) {
+                    if (courseBussines.deleteCourse(Integer.parseInt(id))) {
+                        System.out.println("Xóa thành công!");
+                        break;
+                    } else {
+                        System.out.println("Xóa thất bại!");
+                    }
+                } else {
+                    System.out.println("Hủy xóa.");
+                    exit = true;
+
+                }
+
             } else {
-                System.out.println("Xóa thất bại!");
+                System.err.println("ID không hợp lệ !!!");
             }
-        } else {
-            System.out.println("Hủy xóa.");
-        }
+
+        }while (!exit);
+
     }
 
     public void searchCourse() {
@@ -254,7 +292,6 @@ public class CourseManager {
             courses.forEach(System.out::println);
         }
     }
-
 
 
 }

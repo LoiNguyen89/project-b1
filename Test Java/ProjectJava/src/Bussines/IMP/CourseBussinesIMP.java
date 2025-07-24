@@ -47,4 +47,9 @@ public class CourseBussinesIMP implements CourseBussines {
     public List<Course> sortCourses(String orderBy, boolean asc) {
         return courseDao.sortCourses(orderBy, asc);
     }
+
+    @Override
+    public List<Course> searchCoursesByName(String keyword) {
+        return courseDao.searchCoursesByName(keyword);
+    }
 }

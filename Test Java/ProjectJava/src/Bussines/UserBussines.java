@@ -19,4 +19,8 @@ public interface UserBussines {
     List<User> searchStudentByName(String keyword);
 
     List<User> sortStudent(String orderBy, boolean asc);
+
+    User getUserForLoggin(String username, String password);
+
+    boolean updatePasswordInDB(int userId, String newPassword);
 }

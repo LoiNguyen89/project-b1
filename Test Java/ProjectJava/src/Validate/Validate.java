@@ -1,10 +1,5 @@
 package Validate;
 
-import Ulti.ConnectionDB;
-
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.SQLException;
 import java.util.regex.Pattern;
 
 public class Validate {
@@ -24,27 +19,7 @@ public class Validate {
         return true;
     }
 
-    public static boolean checkUserFromDB(String username, String password) {
-        String callSP = "{CALL validate_user(?, ?, ?)}";
-        try (Connection conn = ConnectionDB.openConnection()) {
-            if (conn == null) {
-                System.out.println("Không kết nối được DB.");
-                return false;
-            }
-            try (CallableStatement stmt = conn.prepareCall(callSP)) {
-                stmt.setString(1, username);
-                stmt.setString(2, password);
-                stmt.registerOutParameter(3, java.sql.Types.INTEGER);
-                stmt.execute();
-                int result = stmt.getInt(3);
-                return result == 1;
-            }
-        } catch (SQLException e) {
-            System.out.println("Lỗi khi gọi validate_user: " + e.getMessage());
-            e.printStackTrace();
-        }
-        return false;
-    }
+
 
 //    COURSE VALIDATE
 
@@ -159,6 +134,7 @@ public class Validate {
     }
 
     // Kiểm tra trạng thái (WAITING, DENIED, CANCEL, CONFIRMED)
+
     public static boolean validateEnrollmentStatus(String status) {
         if (status == null) return false;
         String s = status.toUpperCase().trim();
@@ -169,4 +145,51 @@ public class Validate {
         }
         return true;
     }
+
+
+//    STATISTICS VALIDATE
+
+    public static boolean validatePositiveInt(String value, String fieldLabel) {
+        if (value == null || value.trim().isEmpty()) {
+            System.out.println(fieldLabel + " không được để trống!");
+            return false;
+        }
+        try {
+            int v = Integer.parseInt(value.trim());
+            if (v <= 0) {
+                System.out.println(fieldLabel + " phải > 0!");
+                return false;
+            }
+            return true;
+        } catch (NumberFormatException e) {
+            System.out.println(fieldLabel + " không hợp lệ!");
+            return false;
+        }
+    }
+
+    public static boolean validateNumber(String inputNumber) {
+        try {
+            return Integer.parseInt(inputNumber) > 0 ;
+
+        } catch (Exception e) {
+            return false;
+        }
+
+
+    }
+
+
+    public static boolean validatePassword(String password) {
+        if (password == null || password.trim().isEmpty()) {
+            System.out.println("Mật khẩu không được để trống!");
+            return false;
+        }
+        if (password.length() < 4) {
+            System.out.println("Mật khẩu phải có ít nhất 4 ký tự!");
+            return false;
+        }
+        return true;
+    }
 }
+
+

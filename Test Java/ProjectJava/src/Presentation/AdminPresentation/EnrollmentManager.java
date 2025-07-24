@@ -3,6 +3,7 @@ package Presentation.AdminPresentation;
 import Bussines.EnrollmentBussines;
 import Bussines.IMP.EnrollmentBussinesIMP;
 import Entity.Enrollment;
+import Presentation.AdminMenu;
 import Validate.Validate;
 import java.util.List;
 import java.util.Scanner;
@@ -36,6 +37,7 @@ public class EnrollmentManager {
                 case 3 -> deleteEnrollment();
                 case 4 -> {
                     System.out.println("Thoát menu quản lý đăng ký.");
+                    new AdminMenu();
                     return;
                 }
                 default -> System.out.println("Lựa chọn không hợp lệ!");

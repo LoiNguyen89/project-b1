@@ -259,5 +259,64 @@ public class UserDaoIMP implements UserDao {
 
         return list;
     }
+
+
+    @Override
+    public User getUserForLoggin(String username, String password) {
+        User user = null;
+        String callSP = "{CALL validate_user(?, ?)}";
+        try (Connection conn = ConnectionDB.openConnection()) {
+            if (conn == null) {
+                System.out.println("Không kết nối được DB.");
+                return null;
+            }
+
+            try (CallableStatement stmt = conn.prepareCall(callSP)) {
+                stmt.setString(1, username);
+                stmt.setString(2, password);
+
+                try (ResultSet rs = stmt.executeQuery()) {
+                    if (rs.next()) {
+                        user = new User();
+                        user.setId(rs.getInt("id"));
+                        user.setUsername(rs.getString("username"));
+                        user.setPassword(rs.getString("password"));
+                        user.setRole(rs.getString("role"));
+
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Lỗi khi gọi validate_user: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return user;
+    }
+
+    @Override
+    public boolean updatePasswordInDB(int userId, String newPassword) {
+        Connection conn = null;
+        CallableStatement callst = null;
+
+        try {
+            conn = ConnectionDB.openConnection();
+            callst = conn.prepareCall("{CALL update_student_password(?, ?)}");
+            callst.setInt(1, userId);
+            callst.setString(2, newPassword);
+            callst.execute();
+            return true;
+        } catch (SQLException e) {
+            System.out.println("Lỗi khi cập nhật mật khẩu: " + e.getMessage());
+            return false;
+        } finally {
+            ConnectionDB.closeConnection(conn, callst);
+        }
+    }
+
+
+
+
+
 }
 

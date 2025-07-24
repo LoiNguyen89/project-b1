@@ -5,7 +5,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 
 public class ConnectionDB {
-    private static final String driver = "com.mysql.cj.jdbc.Driver";
+    private static final String DRIVER = "com.mysql.cj.jdbc.Driver";
     private static final String DB_URL = "jdbc:mysql://localhost:3306/test_java";
     private static final String USER = "root";
     private static final String PASS = "Loikimbai123";
@@ -13,8 +13,8 @@ public class ConnectionDB {
     public static Connection openConnection() {
         Connection conn = null;
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/liblary", "root", "Loikimbai123");
+            Class.forName(DRIVER);
+            conn = DriverManager.getConnection(DB_URL, USER, PASS);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -36,7 +36,4 @@ public class ConnectionDB {
             }
         }
     }
-
-
-
 }

@@ -12,4 +12,5 @@ public interface CourseBussines {
     boolean deleteCourse(int id);
     List<Course> searchCourseByName(String keyword);
     List<Course> sortCourses(String orderBy, boolean asc);
+    List<Course> searchCoursesByName(String keyword);
 }

@@ -3,6 +3,7 @@ package Presentation.AdminPresentation;
 import Bussines.UserBussines;
 import Bussines.IMP.UserBussinesIMP;
 import Entity.User;
+import Presentation.AdminMenu;
 import Validate.Validate;
 
 import java.util.List;
@@ -123,6 +124,8 @@ public class UserManager {
         System.out.println("5. Sửa giới tính");
         System.out.println("6. Sửa mật khẩu");
         System.out.println("7. Sửa toàn bộ (username, tên, email, phone, giới tính, mật khẩu)");
+        System.out.println("8. Thoat");
+
         System.out.print("Chọn thuộc tính cần sửa: ");
 
         int opt;
@@ -222,6 +225,10 @@ public class UserManager {
                 }
                 user.setPassword(password);
                 break;
+            case 8:
+                System.out.println("Thoat menu User");
+                new AdminMenu();
+                break;
 
             default:
                 System.out.println("Lựa chọn không hợp lệ!");
@@ -265,7 +272,6 @@ public class UserManager {
         }
     }
 
-    /* ================== 5. TÌM KIẾM ================== */
     public void searchStudent() {
         System.out.println("\n--- Tìm kiếm học viên ---");
         System.out.print("Nhập từ khóa: ");
