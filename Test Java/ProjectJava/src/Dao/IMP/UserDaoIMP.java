@@ -122,10 +122,6 @@ public class UserDaoIMP implements UserDao {
 
     @Override
     public boolean updateStudent(User user) {
-        if (user == null || user.getId() <= 0) {
-            System.err.println("Học viên không hợp lệ để cập nhật.");
-            return false;
-        }
 
         Connection conn = null;
         CallableStatement callst = null;
@@ -230,7 +226,7 @@ public class UserDaoIMP implements UserDao {
             conn = ConnectionDB.openConnection();
             callst = conn.prepareCall("{CALL sort_student(?, ?)}");
 
-            // Procedure của bạn hỗ trợ 'name' hoặc mặc định id
+
             String safe = "id";
             if ("name".equalsIgnoreCase(orderBy)) safe = "name";
             callst.setString(1, safe);

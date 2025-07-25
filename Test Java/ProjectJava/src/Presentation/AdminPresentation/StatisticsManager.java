@@ -69,7 +69,7 @@ public class StatisticsManager {
     }
 
     private void showTopCourses() {
-        int limit = 5; // mặc định
+        int limit = 5;
         System.out.print("Nhập giới hạn Top (bỏ trống dùng 5): ");
         String inp = input.nextLine();
         if (!inp.trim().isEmpty()) {
@@ -86,7 +86,7 @@ public class StatisticsManager {
     }
 
     private void showCoursesOver10() {
-        int threshold = 10; // cố định theo yêu cầu
+        int threshold = 10;
         List<CourseStats> list = statisticsBussines.getCoursesOverThreshold(threshold);
         if (list.isEmpty()) {
             System.out.println("Không có khóa học nào > " + threshold + " học viên.");

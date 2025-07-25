@@ -2,9 +2,11 @@ package Presentation.AdminPresentation;
 
 import Bussines.EnrollmentBussines;
 import Bussines.IMP.EnrollmentBussinesIMP;
+import Entity.Course;
 import Entity.Enrollment;
 import Presentation.AdminMenu;
 import Validate.Validate;
+
 import java.util.List;
 import java.util.Scanner;
 
@@ -45,7 +47,8 @@ public class EnrollmentManager {
         } while (true);
     }
 
-    private void showEnrollmentsByCourse() {
+    public void showEnrollmentsByCourse() {
+        showAllCourses();
         System.out.print("Nhập ID khóa học: ");
         String courseIdStr = input.nextLine();
         if (!Validate.validateCourseId(courseIdStr)) return;
@@ -61,8 +64,9 @@ public class EnrollmentManager {
         }
     }
 
-    private void approveEnrollment() {
-        System.out.print("Nhập ID đăng ký cần duyệt: ");
+    public void approveEnrollment() {
+        showEnrollments();
+        System.out.print("Nhập ID sinh vien đăng ký cần duyệt: ");
         String idStr = input.nextLine();
         if (!Validate.validateEnrollmentId(idStr)) return;
 
@@ -74,16 +78,78 @@ public class EnrollmentManager {
         }
     }
 
-    private void deleteEnrollment() {
-        System.out.print("Nhập ID đăng ký cần xóa: ");
-        String idStr = input.nextLine();
-        if (!Validate.validateEnrollmentId(idStr)) return;
+    public void deleteEnrollment() {
+        showAllCourses();
+        System.out.print("Nhập ID khóa học: ");
+        String courseIdStr = input.nextLine();
+        if (!Validate.validateCourseId(courseIdStr)) return;
+        int courseId = Integer.parseInt(courseIdStr);
+        List<Enrollment> enrollments = enrollmentBussines.getEnrollmentsByCourse(courseId);
+        if (enrollments.isEmpty()) {
+            System.out.println("Không có sinh viên nào đăng ký khóa học này.");
+            return;
+        }
 
-        int id = Integer.parseInt(idStr);
-        if (enrollmentBussines.deleteEnrollment(id)) {
+        System.out.println("\n--- Danh sách sinh viên đăng ký khóa học ---");
+        for (Enrollment e : enrollments) {
+            System.out.printf("Student ID: %d | Enrollment ID: %d | Tên: %s | Email: %s | Ngày đăng ký: %s | Trạng thái: %s\n",
+                    e.getStudentId(), e.getId(), e.getStudentName(), e.getEmail(),
+                    e.getRegisteredAt().toLocalDate(), e.getStatus());
+        }
+
+
+        System.out.print("Nhập mã sinh viên cần xóa khỏi khóa học: ");
+        String studentIdStr = input.nextLine();
+        if (!Validate.validateStudentId(studentIdStr)) return;
+
+        int studentId = Integer.parseInt(studentIdStr);
+
+
+        Enrollment enrollmentToDelete = null;
+        for (Enrollment e : enrollments) {
+            if (e.getStudentId() == studentId) {
+                enrollmentToDelete = e;
+                break;
+            }
+        }
+
+        if (enrollmentToDelete == null) {
+            System.out.println("Không tìm thấy bản ghi đăng ký của sinh viên này trong khóa học.");
+            return;
+        }
+
+        // Bước 6: Thực hiện xóa theo enrollment ID
+        int enrollmentId = enrollmentToDelete.getId();
+        if (enrollmentBussines.deleteEnrollment(enrollmentId)) {
             System.out.println("Xóa thành công!");
         } else {
             System.out.println("Xóa thất bại!");
         }
     }
+
+
+    public void showEnrollments() {
+        List<Enrollment> enrollments = enrollmentBussines.getAllEnrollments();
+        if (enrollments.isEmpty()) {
+            System.out.println("Không có khóa học nào!");
+            return;
+        }
+        System.out.println("\n--- Danh sách khóa học ---");
+        for (Enrollment e : enrollments) {
+            System.out.println(e);
+        }
+    }
+
+    public void showAllCourses() {
+        List<Course> courses = enrollmentBussines.getAllCourses();
+        if (courses.isEmpty()) {
+            System.out.println("Không có khóa học nào!");
+            return;
+        }
+        System.out.println("\n--- Danh sách khóa học ---");
+        for (Course c : courses) {
+            System.out.println(c);
+        }
+    }
 }
+

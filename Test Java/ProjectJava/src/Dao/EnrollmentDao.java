@@ -13,4 +13,6 @@ public interface EnrollmentDao {
     boolean registerCourse(int studentId, int courseId);
     List<Course> getRegisteredCourses(int studentId);
     boolean cancelRegistration(int enrollmentId);
+    List<Enrollment> getAllEnrollments();
+    List<Course> getAllCourses();
 }

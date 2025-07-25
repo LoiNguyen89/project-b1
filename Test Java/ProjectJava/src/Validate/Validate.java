@@ -190,6 +190,21 @@ public class Validate {
         }
         return true;
     }
+
+    public static boolean validateStudentId(String studentIdStr) {
+        try {
+            int id = Integer.parseInt(studentIdStr);
+            if (id <= 0) {
+                System.out.println("Student ID phải > 0.");
+                return false;
+            }
+            return true;
+        } catch (NumberFormatException e) {
+            System.out.println("Student ID không hợp lệ!");
+            return false;
+        }
+    }
+
 }
 
 

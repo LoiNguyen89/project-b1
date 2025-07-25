@@ -15,7 +15,8 @@ public class CourseManager {
 
     public CourseManager() {
         courseBussines = new CourseBussinesIMP();
-
+        boolean exit = false;
+        int choice;
         do {
             System.out.println("\n===== QUẢN LÝ KHÓA HỌC =====");
             System.out.println("1. Hiển thị danh sách khóa học");
@@ -27,7 +28,12 @@ public class CourseManager {
             System.out.println("7. Thoát");
             System.out.print("Chọn: ");
 
-            int choice = Integer.parseInt(input.nextLine());
+            try {
+                choice = Integer.parseInt(input.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Lựa chọn không hợp lệ!");
+                continue;
+            }
             switch (choice) {
                 case 1:
                     showAllCourses();
@@ -49,14 +55,15 @@ public class CourseManager {
                     break;
                 case 7:
                     System.out.println("Thoát menu quản lý.");
-                    new AdminMenu();
+                    exit = true;
+
                     break;
                 default:
                     System.err.println("Lựa chọn không hợp lệ!");
                     break;
             }
 
-        } while (true);
+        } while (!exit);
     }
 
     public void showAllCourses() {
@@ -65,7 +72,10 @@ public class CourseManager {
             System.out.println("Không có khóa học nào!");
             return;
         }
-        System.out.println("\n--- Danh sách khóa học ---");
+        System.out.println("\n================================ DANH SÁCH KHOÁ HỌC ===============================");
+        System.out.printf("%-5s | %-15s | %-15s | %-15s | %-15s\n",
+                "ID", "NAME", "DURATION", "INSTRUCTOR", "CREAAT AT");
+
         for (Course c : courses) {
             System.out.println(c);
         }
@@ -95,6 +105,7 @@ public class CourseManager {
     }
 
     public void editCourse() {
+        showAllCourses();
         boolean exit = false;
         do {
 
@@ -176,6 +187,7 @@ public class CourseManager {
     }
 
     public void deleteCourse() {
+        showAllCourses();
         boolean exit = false;
         do {
             System.out.println("\n--- Xóa khóa học ---");

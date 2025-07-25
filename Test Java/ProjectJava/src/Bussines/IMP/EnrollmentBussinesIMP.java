@@ -48,4 +48,14 @@ public class EnrollmentBussinesIMP implements EnrollmentBussines {
     public boolean cancelRegistration(int enrollmentId) {
         return enrollmentDao.cancelRegistration(enrollmentId);
     }
+
+    @Override
+    public List<Enrollment> getAllEnrollments() {
+        return enrollmentDao.getAllEnrollments();
+    }
+
+    @Override
+    public List<Course> getAllCourses() {
+        return enrollmentDao.getAllCourses();
+    }
 }

@@ -11,7 +11,6 @@ import java.util.List;
 
 public class EnrollmentDaoIMP implements EnrollmentDao {
 
-
     @Override
     public List<Enrollment> getEnrollmentsByCourse(int courseId) {
         List<Enrollment> enrollments = new ArrayList<>();
@@ -29,9 +28,12 @@ public class EnrollmentDaoIMP implements EnrollmentDao {
                 e.setId(rs.getInt("id"));
                 e.setStudentId(rs.getInt("student_id"));
                 e.setCourseId(rs.getInt("course_id"));
-                Timestamp ts = rs.getTimestamp("registered_at");
-                if (ts != null) e.setRegisteredAt(ts.toLocalDateTime());
+                e.setRegisteredAt(rs.getTimestamp("registered_at").toLocalDateTime());
                 e.setStatus(rs.getString("status"));
+                e.setStudentName(rs.getString("student_name"));
+                e.setEmail(rs.getString("email"));
+
+
                 enrollments.add(e);
             }
         } catch (SQLException e) {
@@ -41,6 +43,7 @@ public class EnrollmentDaoIMP implements EnrollmentDao {
         }
         return enrollments;
     }
+
 
     @Override
     public boolean updateEnrollmentStatus(int id, String status) {
@@ -120,9 +123,7 @@ public class EnrollmentDaoIMP implements EnrollmentDao {
                 course.setName(rs.getString("name"));
                 course.setDuration(rs.getInt("duration"));
                 course.setInstructor(rs.getString("instructor"));
-
-                Timestamp timestamp = rs.getTimestamp("create_at");
-                course.setCreateAt(timestamp != null ? timestamp.toLocalDateTime() : null);
+                course.setCreateAt(rs.getTimestamp("create_at").toLocalDateTime());
 
                 courseList.add(course);
             }
@@ -158,7 +159,70 @@ public class EnrollmentDaoIMP implements EnrollmentDao {
             ConnectionDB.closeConnection(conn, callst);
         }
     }
+
+    @Override
+    public List<Enrollment> getAllEnrollments() {
+        List<Enrollment> list = new ArrayList<>();
+        Connection conn = null;
+        CallableStatement callst = null;
+        ResultSet rs = null;
+        try {
+            conn = ConnectionDB.openConnection();
+            callst = conn.prepareCall("{CALL get_all_enrollment()}");
+            rs = callst.executeQuery();
+            while (rs.next()) {
+                Enrollment enrollment = new Enrollment();
+                enrollment.setId(rs.getInt("id"));
+                enrollment.setStudentId(rs.getInt("student_id"));
+                enrollment.setCourseId(rs.getInt("course_id"));
+                enrollment.setStatus(rs.getString("status"));
+                enrollment.setRegisteredAt(rs.getTimestamp("registered_at").toLocalDateTime());
+                enrollment.setStudentName(rs.getString("name")); // ✅ sửa đúng
+                enrollment.setEmail(rs.getString("email"));       // ✅ nếu có trường email
+                list.add(enrollment);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            ConnectionDB.closeConnection(conn, callst);
+        }
+        return list;
+    }
+
+    @Override
+    public List<Course> getAllCourses() {
+        List<Course> list = new ArrayList<>();
+        Connection conn = null;
+        CallableStatement callst = null;
+        ResultSet rs = null;
+
+        try {
+            conn = ConnectionDB.openConnection();
+            callst = conn.prepareCall("{CALL get_all_courses()}");
+            rs = callst.executeQuery();
+            while (rs.next()) {
+                Course course = new Course();
+                course.setId(rs.getInt("id"));
+                course.setName(rs.getString("name"));
+                course.setDuration(rs.getInt("duration"));
+                course.setInstructor(rs.getString("instructor"));
+                course.setCreateAt(rs.getTimestamp("create_at").toLocalDateTime());
+
+
+                list.add(course);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            ConnectionDB.closeConnection(conn, callst);
+        }
+        return list;
+    }
 }
+
+
+
+
 
 
 

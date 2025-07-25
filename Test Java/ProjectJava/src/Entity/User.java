@@ -1,4 +1,5 @@
 package Entity;
+
 import java.time.LocalDateTime;
 import java.sql.Date;
 
@@ -14,7 +15,8 @@ public class User {
     private String phone;
     private LocalDateTime createAt;
 
-    public User() {}
+    public User() {
+    }
 
     public User(int id, String username, String password, String role,
                 String name, Date dob, String email, boolean sex, String phone, LocalDateTime createAt) {
@@ -31,46 +33,102 @@ public class User {
     }
 
     // Getter & Setter
-    public int getId() { return id; }
-    public void setId(int id) { this.id = id; }
+    public int getId() {
+        return id;
+    }
 
-    public String getUsername() { return username; }
-    public void setUsername(String username) { this.username = username; }
+    public void setId(int id) {
+        this.id = id;
+    }
 
-    public String getPassword() { return password; }
-    public void setPassword(String password) { this.password = password; }
+    public String getUsername() {
+        return username;
+    }
 
-    public String getRole() { return role; }
-    public void setRole(String role) { this.role = role; }
+    public void setUsername(String username) {
+        this.username = username;
+    }
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+    public String getPassword() {
+        return password;
+    }
 
-    public Date getDob() { return dob; }
-    public void setDob(Date dob) { this.dob = dob; }
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
-    public String getEmail() { return email; }
-    public void setEmail(String email) { this.email = email; }
+    public String getRole() {
+        return role;
+    }
 
-    public boolean isSex() { return sex; }
-    public void setSex(boolean sex) { this.sex = sex; }
+    public void setRole(String role) {
+        this.role = role;
+    }
 
-    public String getPhone() { return phone; }
-    public void setPhone(String phone) { this.phone = phone; }
+    public String getName() {
+        return name;
+    }
 
-    public LocalDateTime getCreateAt() { return createAt; }
-    public void setCreateAt(LocalDateTime createAt) { this.createAt = createAt; }
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Date getDob() {
+        return dob;
+    }
+
+    public void setDob(Date dob) {
+        this.dob = dob;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public boolean isSex() {
+        return sex;
+    }
+
+    public void setSex(boolean sex) {
+        this.sex = sex;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
+
+    public LocalDateTime getCreateAt() {
+        return createAt;
+    }
+
+    public void setCreateAt(LocalDateTime createAt) {
+        this.createAt = createAt;
+    }
+
 
     @Override
     public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username='" + username + '\'' +
-                ", role='" + role + '\'' +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", phone='" + phone + '\'' +
-                ", createAt=" + createAt +
-                '}';
+
+        return String.format(
+                " %-5s |  %-15s |  %-15s | %-15s |  %-15s |  %-30s | %-15s | %-15s",
+                this.id,
+                this.username,
+                this.name,
+                this.role,
+                this.dob,
+                this.email,
+                sex ? "man" : "woman",
+                this.phone,
+                this.createAt.toLocalDate()
+        );
     }
+
 }

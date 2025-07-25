@@ -43,12 +43,12 @@ public class Course {
 
     @Override
     public String toString() {
-        return "Course{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", duration=" + duration +
-                ", instructor='" + instructor + '\'' +
-                ", createAt=" + createAt +
-                '}';
+
+
+        return String.format("%-5s | %-15s | %-15s | %-15s | %-15s",
+                this.id, this.name, this.duration, this.instructor, this.createAt);
+
     }
+
+
 }

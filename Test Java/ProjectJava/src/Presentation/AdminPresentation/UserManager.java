@@ -6,8 +6,12 @@ import Entity.User;
 import Presentation.AdminMenu;
 import Validate.Validate;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
+
+import static Presentation.StudentMenu.user;
 
 public class UserManager {
     Scanner input = new Scanner(System.in);
@@ -55,29 +59,57 @@ public class UserManager {
 
 
     public void showAllStudents() {
+
         List<User> users = userBussines.getAllStudents();
         if (users.isEmpty()) {
             System.out.println("Không có học viên nào!");
             return;
         }
-        System.out.println("\n--- Danh sách học viên ---");
+        System.out.println("\n================================================================ DANH SÁCH HỌC VIÊN ================================================================");
+
+        System.out.printf(" %-5s |  %-15s |  %-15s | %-15s |  %-15s |  %-30s | %-15s | %-15s\n",
+                "ID", "USERNAME", "NAME", "ROLE", "BIRTHDAY", "EMAIL", "SEX", "NUMBER PHONE", "CREATE AT");
+
         users.forEach(System.out::println);
     }
 
 
     public void addStudent() {
+        LocalDate dob;
+
         System.out.println("\n--- Thêm học viên ---");
         System.out.print("Nhập username: ");
-        String username = input.nextLine();
+        String username = input.nextLine().trim();
         System.out.print("Nhập tên: ");
-        String name = input.nextLine();
+        String name = input.nextLine().trim();
         System.out.print("Nhập email: ");
-        String email = input.nextLine();
+        String email = input.nextLine().trim();
         System.out.print("Nhập số điện thoại: ");
-        String phone = input.nextLine();
-        System.out.print("Nhập giới tính (1=Nam, 0=Nữ): ");
-        String sexStr = input.nextLine();
-        boolean sex = "1".equals(sexStr);
+        String phone = input.nextLine().trim();
+        System.out.print("Nhập giới tính (1 = Nam, 0 = Nữ): ");
+        String sexStr = input.nextLine().trim();
+
+        boolean sex;
+        if ("1".equals(sexStr)) {
+            sex = true;
+        } else if ("0".equals(sexStr)) {
+            sex = false;
+        } else {
+            System.out.println("Giới tính không hợp lệ!");
+            return;
+        }
+
+        while (true) {
+            System.out.print("Nhập ngày sinh (yyyy-MM-dd): ");
+            String dobStr = input.nextLine().trim();
+            try {
+                dob = LocalDate.parse(dobStr);
+                break;
+            } catch (DateTimeParseException e) {
+                System.out.println("Ngày sinh không hợp lệ!");
+
+            }
+        }
 
         if (!Validate.validateUserInput(username, name, email, phone)) {
             System.out.println("Dữ liệu không hợp lệ!");
@@ -90,9 +122,12 @@ public class UserManager {
         user.setEmail(email);
         user.setPhone(phone);
         user.setSex(sex);
+        user.setDob(java.sql.Date.valueOf(dob));
+
 
         if (userBussines.addStudent(user)) {
             System.out.println("Thêm học viên thành công (mật khẩu mặc định: 123456)!");
+
         } else {
             System.out.println("Thêm học viên thất bại!");
         }
@@ -100,6 +135,7 @@ public class UserManager {
 
 
     public void editStudent() {
+        showAllStudents();
         System.out.println("\n--- Chỉnh sửa học viên ---");
         System.out.print("Nhập ID học viên cần sửa: ");
         int id;
@@ -115,7 +151,10 @@ public class UserManager {
             System.out.println("Không tìm thấy học viên!");
             return;
         }
-        System.out.println("Thông tin hiện tại: " + user);
+
+        System.out.printf(" %-5s |  %-15s |  %-15s | %-15s |  %-15s |  %-30s | %-15s | %-15s\n",
+                "ID", "USERNAME", "NAME", "ROLE", "BIRTHDAY", "EMAIL", "SEX", "NUMBER PHONE", "CREATE AT");
+        System.out.println(user);
 
         System.out.println("1. Sửa username");
         System.out.println("2. Sửa tên");
@@ -123,7 +162,7 @@ public class UserManager {
         System.out.println("4. Sửa số điện thoại");
         System.out.println("5. Sửa giới tính");
         System.out.println("6. Sửa mật khẩu");
-        System.out.println("7. Sửa toàn bộ (username, tên, email, phone, giới tính, mật khẩu)");
+        System.out.println("7. Sửa ngày sinh");
         System.out.println("8. Thoat");
 
         System.out.print("Chọn thuộc tính cần sửa: ");
@@ -194,36 +233,19 @@ public class UserManager {
                 break;
 
             case 7:
-                System.out.print("Nhập username mới: ");
-                username = input.nextLine();
-                if (!Validate.validateUsername(username)) return;
-                user.setUsername(username);
+                LocalDate dob;
+                while (true) {
+                    System.out.print("Nhập ngày sinh (yyyy-MM-dd): ");
+                    String dobStr = input.nextLine().trim();
+                    try {
+                        dob = LocalDate.parse(dobStr);
+                        break;
+                    } catch (DateTimeParseException e) {
+                        System.out.println("Ngày sinh không hợp lệ!");
 
-                System.out.print("Nhập tên mới: ");
-                name = input.nextLine();
-                if (!Validate.validateName(name)) return;
-                user.setName(name);
-
-                System.out.print("Nhập email mới: ");
-                email = input.nextLine();
-                if (!Validate.validateEmail(email)) return;
-                user.setEmail(email);
-
-                System.out.print("Nhập số điện thoại mới: ");
-                phone = input.nextLine();
-                if (!Validate.validatePhone(phone)) return;
-                user.setPhone(phone);
-
-                System.out.print("Nhập giới tính mới (1=Nam, 0=Nữ): ");
-                user.setSex("1".equals(input.nextLine()));
-
-                System.out.print("Nhập mật khẩu mới: ");
-                password = input.nextLine();
-                if (password == null || password.isEmpty()) {
-                    System.out.println("Mật khẩu không được trống!");
-                    return;
+                    }
                 }
-                user.setPassword(password);
+                user.setDob(java.sql.Date.valueOf(dob));
                 break;
             case 8:
                 System.out.println("Thoat menu User");
@@ -244,6 +266,7 @@ public class UserManager {
 
 
     public void deleteStudent() {
+        searchStudent();
         System.out.println("\n--- Xóa học viên ---");
         System.out.print("Nhập ID học viên cần xóa: ");
         int id;
@@ -280,6 +303,7 @@ public class UserManager {
         if (users.isEmpty()) {
             System.out.println("Không tìm thấy học viên!");
         } else {
+            System.out.println("\n=================================================================== THÔNG TIN HỌC VIÊN ====================================================================");
             users.forEach(System.out::println);
         }
     }
@@ -323,7 +347,8 @@ public class UserManager {
         if (users.isEmpty()) {
             System.out.println("Không có học viên nào để sắp xếp.");
         } else {
-            System.out.println("\n--- Danh sách học viên sau khi sắp xếp ---");
+            System.out.println("\n======================================================= DANH SÁCH HỌC VIÊN SAU KHI SẮP XẾP ========================================================");
+
             users.forEach(System.out::println);
         }
     }

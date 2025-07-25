@@ -12,7 +12,6 @@ public class Main {
     public static void main(String[] args) {
         Scanner input = new Scanner(System.in);
         UserBussines userBussines = new UserBussinesIMP();
-
         do {
             System.out.println("=== Đăng Nhập Hệ Thống ===");
             System.out.print("Nhập Username: ");
